@@ -1,0 +1,105 @@
+USE TSQL2012;
+GO
+;
+;
+select * from Production.Categories;
+select * from Production.Products;
+select * from Production.Suppliers;
+select * from Sales.Customers; -- SCU
+select * from Sales.OrderDetails; -- SOD
+select * from Sales.Orders; -- SO
+;
+;
+select so.orderid, so.custid, scu.companyname, scu.city, scu.country
+from Sales.Orders SO
+     left join Sales.Customers SCU on so.custid = scu.custid
+--where scu.country in ('Spain','Italy','USA')
+--order by scu.country asc 
+;
+;
+select so.orderid, so.custid, scu.companyname, scu.city, scu.country, sum(sod.unitprice *sod.qty) as 'Amount'
+from Sales.Orders SO
+     left join Sales.OrderDetails SOD  on sod.orderid = so.orderid
+	 join Sales.Customers SCU on so.custid = scu.custid
+where so.custid in (1,2,3,4,5,6,7,8,9,10)
+group by so.orderid, so.custid, scu.companyname, scu.city, scu.country
+order by custid, sum(sod.unitprice*sod.qty) desc
+;
+select sod.orderid, sum(sod.unitprice * sod.qty) as 'Amount'
+from Sales.OrderDetails SOD
+group by sod.orderid
+;
+;
+select so.orderid, so.custid, scu.companyname, scu.city, scu.country
+from Sales.Orders SO
+     left join Sales.Customers SCU on so.custid = scu.custid
+where scu.country in ('Spain','Italy','USA')
+order by scu.country asc 
+;
+select * from Production.Categories     --PC  ;
+select * from Production.Products  /* -- PP */ ;
+select * from Production.Suppliers /* -- PS */;
+select * from Sales.Customers; -- SCU
+select * from Sales.OrderDetails; -- SOD
+select * from Sales.Orders; -- SO   
+select * from HR.Employees -- HE
+;
+;
+select pp.productid, pp.productname, pc.categoryid, pc.categoryname 
+from Production.Products PP
+     left join Production.Categories PC on pp.categoryid = pc.categoryid 
+--where pp.productname like 'Product A%'
+;
+select count(pp.productid) as 'Products in each category', pc.categoryid, pc.categoryname 
+from Production.Products PP
+     left join Production.Categories PC on pp.categoryid = pc.categoryid 
+group by pc.categoryid, pc.categoryname 
+order by count(pp.productid) desc 
+;
+;
+select pp.productid, pp.productname, pc.categoryid, pc.categoryname 
+from Production.Products PP
+     left join Production.Categories PC on pp.categoryid = pc.categoryid 
+;
+;
+select pp.productid, pp.productname, pp.unitprice, ps.supplierid, ps.companyname, ps.contactname, ps.city, ps.country
+from Production.Products PP 
+     left join Production.Suppliers PS on pp.supplierid = ps.supplierid
+;
+;
+select count(pp.productid) as 'NR of products by supplier' , ps.supplierid, ps.companyname
+from Production.Products PP 
+     left join Production.Suppliers PS on pp.supplierid = ps.supplierid
+group by ps.supplierid, ps.companyname, ps.contactname 
+;
+;
+select distinct companyname from Production.Suppliers
+;
+;
+select * from Production.Categories     --PC  ;
+select * from Production.Products  /* -- PP */ ;
+select * from Production.Suppliers /* -- PS */;
+select * from Sales.Customers; -- SCU
+select * from Sales.OrderDetails; -- SOD
+select * from Sales.Orders; -- SO   
+select * from HR.Employees -- HE
+select * from Sales.Shippers -- SH
+;
+;
+select so.orderid, so.custid, he.empid, he.firstname, he.lastname, he.title
+from Sales.Orders SO 
+     left join HR.Employees HE on so.empid = he.empid 
+;
+;
+select count(so.orderid) as 'Nr OF ORDERS MAKE BY EMPLOYEE', he.empid, he.firstname, he.lastname, he.title
+from Sales.Orders SO 
+     left join HR.Employees HE on so.empid = he.empid 
+group by he.empid, he.firstname, he.lastname, he.title
+order by count(so.orderid) desc 
+;
+;
+select count(so.orderid) as 'Orders by Shipper Companies', sh.shipperid, sh.companyname, sh.phone
+from Sales.Orders SO 
+     join Sales.Shippers SH on so.shipperid = sh.shipperid 
+group by sh.shipperid, sh.companyname, sh.phone 
+order by count(so.orderid) desc
