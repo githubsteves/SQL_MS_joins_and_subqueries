@@ -42,3 +42,25 @@ select * from Person.PersonPhone
 select * from Person.PhoneNumberType 
 select * from Person.StateProvince 
 ;
+
+select * from Sales.CountryRegionCurrency;
+select * from Sales.CreditCard;
+select * from Sales.Currency;
+select * from Sales.CurrencyRate;
+select * from Sales.Customer;
+select * from Sales.PersonCreditCard;
+select * from Sales.SalesOrderDetail;
+select * from Sales.SalesOrderHeader;
+select * from Sales.SalesOrderHeaderSalesReason;
+select * from Sales.SalesPerson;
+select * from Sales.SalesPersonQuotaHistory;
+select * from Sales.SalesReason;
+select * from Sales.SalesTaxRate;
+select * from Sales.SalesTerritory;
+select * from Sales.SalesTerritoryHistory;
+select * from Sales.ShoppingCartItem;
+select * from Sales.SpecialOffer;
+select * from Sales.SpecialOfferProduct;
+select * from Sales.Store;
+select * from Person.Person 
+
