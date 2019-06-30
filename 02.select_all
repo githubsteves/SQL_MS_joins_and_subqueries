@@ -64,3 +64,29 @@ select * from Sales.SpecialOfferProduct;
 select * from Sales.Store;
 select * from Person.Person 
 
+
+select * from Production.BillOfMaterials ;
+select * from Production.Culture ;
+select * from Production.Document ;
+select * from Production.Illustration ;
+select * from Production.Location ;
+select * from Production.Product ;
+select * from Production.ProductCategory ;
+select * from Production.ProductCostHistory ;
+select * from Production.ProductDescription ;
+select * from Production.ProductDocument ;
+select * from Production.ProductInventory ;
+select * from Production.ProductListPriceHistory ;
+select * from Production.ProductModel ;
+select * from Production.ProductModelIllustration ;
+select * from Production.ProductModelProductDescriptionCulture ;
+select * from Production.ProductPhoto ;
+select * from Production.ProductProductPhoto ;
+select * from Production.ProductReview ;
+select * from Production.ProductSubcategory ;
+select * from Production.ScrapReason ;
+select * from Production.TransactionHistory ;
+select * from Production.TransactionHistoryArchive ;
+select * from Production.UnitMeasure ;
+select * from Production.WorkOrder ;
+select * from Production.WorkOrderRouting ;
