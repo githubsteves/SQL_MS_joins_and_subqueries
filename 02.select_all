@@ -20,3 +20,25 @@ select * from dbo.Products;
 select * from dbo.Region;
 select * from dbo.Suppliers;
 ;
+select * from HumanResources.Department;
+select * from HumanResources.Employee;
+select * from HumanResources.EmployeeDepartmentHistory;
+select * from HumanResources.EmployeePayHistory;
+select * from HumanResources.JobCandidate;
+select * from HumanResources.Shift;
+;
+
+select * from Person.Address
+select * from Person.AddressType
+select * from Person.BusinessEntity
+select * from Person.BusinessEntityAddress
+select * from Person.BusinessEntityContact 
+select * from Person.ContactType
+select * from Person.CountryRegion 
+select * from Person.EmailAddress
+select * from Person.Password
+select * from Person.Person
+select * from Person.PersonPhone 
+select * from Person.PhoneNumberType 
+select * from Person.StateProvince 
+;
