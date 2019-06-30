@@ -1,0 +1,117 @@
+USE AdventureWorks2012
+GO
+;
+;
+select * from Production.BillOfMaterials ;
+select * from Production.Culture ;
+select * from Production.Document ;
+select * from Production.Illustration ;
+select * from Production.Location ;
+select * from Production.Product ;
+select * from Production.ProductCategory ;
+select * from Production.ProductCostHistory ;
+select * from Production.ProductDescription ;
+select * from Production.ProductDocument ;
+select * from Production.ProductInventory ;
+select * from Production.ProductListPriceHistory ;
+select * from Production.ProductModel ;
+select * from Production.ProductModelIllustration ;
+select * from Production.ProductModelProductDescriptionCulture ;
+select * from Production.ProductPhoto ;
+select * from Production.ProductProductPhoto ;
+select * from Production.ProductReview ;
+select * from Production.ProductSubcategory ;
+select * from Production.ScrapReason ;
+select * from Production.TransactionHistory ;
+select * from Production.TransactionHistoryArchive ;
+select * from Production.UnitMeasure ;
+select * from Production.WorkOrder ;
+select * from Production.WorkOrderRouting ;
+;
+;
+select * from Production.TransactionHistory ;
+select * from Production.TransactionHistoryArchive ;
+;
+;
+select count(ProductID), sum(Quantity)
+from Production.TransactionHistory 
+;
+;
+select * from Sales.SalesOrderHeader ;
+select * from Sales.SalesOrderDetail ;
+select * from Sales.SalesTerritory   ;
+select * from Production.Product     ;
+select * from HumanResources.Employee;
+;
+;
+select sod.SalesOrderID, sod.OrderQty, sod.LineTotal, p.ProductID, p.Name 
+from Sales.SalesOrderDetail SOD 
+     join Production.Product P on sod.ProductID = p.ProductID 
+;
+;
+-- NR of Products by SalesOrderID 
+select sod.SalesOrderID, sum(sod.OrderQty) as 'Quantity', sum(sod.LineTotal) as 'TotalAmount' ,
+       count(p.ProductID) as 'Count of Products'
+from Sales.SalesOrderDetail SOD
+     join Production.Product P on sod.ProductID = p.ProductID 
+group by sod.SalesOrderID 
+order by sum(sod.LineTotal) desc 
+;
+;
+select * from Sales.SalesOrderHeader ;
+select * from Sales.SalesTerritory   ;
+select * from Production.Product     ;
+;
+;
+select st.TerritoryID, st.Name, sod.SalesOrderID, sod.Status
+from Sales.SalesTerritory ST 
+     join Sales.SalesOrderHeader SOD on st.TerritoryID = sod.TerritoryID 
+;
+;
+-- NR of SalesOrderIDs by Territory 
+select st.TerritoryID, st.Name, count(sod.SalesOrderID) as 'Nr of SalesOrders'
+from Sales.SalesTerritory ST 
+     join Sales.SalesOrderHeader SOD on st.TerritoryID = sod.TerritoryID 
+group by st.TerritoryID, st.Name 
+order by count(sod.SalesOrderID) desc 
+;
+;
+;
+select * from Sales.SalesOrderHeader ;
+select * from Sales.SalesTerritory   ;
+select * from Production.Product     ;
+select * from Sales.SalesOrderDetail ;
+;;;
+;;;
+-- NR of Products by SalesOrderID 
+select sod.SalesOrderID, sum(sod.OrderQty) as 'Quantity', sum(sod.LineTotal) as 'TotalAmount' ,
+       count(p.ProductID) as 'Count of Products'
+from Sales.SalesOrderDetail SOD 
+     join Production.Product P on sod.ProductID = p.ProductID 
+group by sod.SalesOrderID 
+order by sum(sod.LineTotal) desc 
+;
+;
+-- NR of SalesOrderIDs by Territory   
+-------
+--WRONG QUERY 
+-------
+select st.TerritoryID, st.Name, count(soh.SalesOrderID) as 'Nr of SalesOrders', 
+       sum(sod.LineTotal) as 'Amunt per TerritoryID', count(sod.ProductID) as 'Nr of Products per TerritoryID'
+from Sales.SalesTerritory ST 
+     join Sales.SalesOrderHeader SOH on st.TerritoryID = soh.TerritoryID 
+	 left join Sales.SalesOrderDetail SOD on soh.SalesOrderID = sod.SalesOrderID 
+group by st.TerritoryID, st.Name 
+order by count(soh.SalesOrderID) desc 
+;
+;
+-----
+select sod.SalesOrderID, sum(sod.OrderQty) as 'Quantity', sum(sod.LineTotal) as 'TotalAmount' ,
+       count(p.ProductID) as 'Count of Products', st.TerritoryID
+from Sales.SalesOrderDetail SOD 
+     join Production.Product P on sod.ProductID = p.ProductID 
+	 join Sales.SalesOrderHeader SOH on sod.SalesOrderID = soh.SalesOrderID 
+	 join Sales.SalesTerritory ST on soh.TerritoryID = st.TerritoryID 
+group by sod.SalesOrderID ,st.TerritoryID 
+order by sum(sod.LineTotal) desc 
+;
