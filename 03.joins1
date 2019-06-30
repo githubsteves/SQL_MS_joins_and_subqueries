@@ -1,0 +1,59 @@
+USE AdventureWorks2012;
+GO
+select * from Production.Product 
+;
+select * from Production.WorkOrder
+;
+select pp.ProductID, pw.OrderQty
+from  Production.Product PP inner join Production.WorkOrder PW
+                          on pp.ProductID = pw.ProductID 
+
+;
+
+select pp.ProductID, pp.Name, pp.ListPrice, pw.OrderQty
+from Production.Product PP
+     left join Production.WorkOrder PW
+	      on pp.ProductID = pw.ProductID
+;
+
+select * from HumanResources.Department HD
+;
+select * from HumanResources.Employee HE
+;
+select * from HumanResources.EmployeeDepartmentHistory HEDH
+;
+
+select HE.BusinessEntityID, HE.JobTitle, HE.OrganizationLevel, HEDH.DepartmentID,HEDH.EndDate, HD.Name
+from HumanResources.Employee HE 
+     left join HumanResources.EmployeeDepartmentHistory HEDH
+	      on HE.BusinessEntityID = HEDH.BusinessEntityID
+	 left join HumanResources.Department HD 
+          on HEDH.DepartmentID = HD.DepartmentID
+;
+select * from HumanResources.Employee HE
+select * from Person.Person PP
+;
+select pp.BusinessEntityID, pp.FirstName, pp.LastName, he.JobTitle
+from Person.Person PP 
+     left join HumanResources.Employee HE 
+	      on pp.BusinessEntityID = he.BusinessEntityID
+;
+select pp.BusinessEntityID, pp.FirstName, pp.LastName, he.JobTitle
+from Person.Person PP 
+     inner join HumanResources.Employee HE 
+	      on pp.BusinessEntityID = he.BusinessEntityID
+;
+select * from HumanResources.EmployeePayHistory
+select * from HumanResources.JobCandidate 
+;
+select * from Person.Person 
+;
+select * from Person.Address
+select * from Person.AddressType
+select * from Person.BusinessEntityAddress
+;
+select pp.BusinessEntityID, pp.FirstName, pp.LastName, pbea.AddressID
+from Person.Person PP
+     left join Person.BusinessEntityAddress PBEA
+	      on pp.BusinessEntityID = pbea.BusinessEntityID
+;
