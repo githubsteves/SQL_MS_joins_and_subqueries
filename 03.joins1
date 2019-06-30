@@ -57,3 +57,41 @@ from Person.Person PP
      left join Person.BusinessEntityAddress PBEA
 	      on pp.BusinessEntityID = pbea.BusinessEntityID
 ;
+
+
+select pp.ProductID, pp.Name, pwo.StartDate 
+from Production.WorkOrder PWO
+     left join Production.Product PP
+	      on pp.ProductID = pwo.ProductID 
+
+;
+select pp.ProductID, pp.Name, pwo.StartDate 
+from Production.Product PP 
+     left join Production.WorkOrder PWO
+	      on pp.ProductID = pwo.ProductID 
+;
+select pp.ProductID, pp.Name, pwo.StartDate 
+from Production.Product PP 
+     left join Production.WorkOrder PWO
+	      on pp.ProductID = pwo.ProductID 
+where pp.ProductID in (492,933,435)
+
+--- No sold products from type (492,933,435)
+;
+;
+;
+select distinct pp.ProductID, pp.Name, pwo.StartDate 
+from Production.WorkOrder PWO
+     left join Production.Product PP
+	      on pp.ProductID = pwo.ProductID 
+where pwo.StartDate between '2006-01-01' and '2006-12-31'
+;
+;
+select * from Production.Product; -- PP
+select * from Sales.SalesOrderDetail; -- SOD
+;
+;
+select sod.SalesOrderID, sod.LineTotal
+from Sales.SalesOrderDetail SOD
+     left join Production.Product PP on sod.ProductID = pp.ProductID 
+;
