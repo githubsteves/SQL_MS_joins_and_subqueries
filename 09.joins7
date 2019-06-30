@@ -1,0 +1,101 @@
+USE AdventureWorks2012;
+GO
+;
+;
+select * from Production.BillOfMaterials ;
+select * from Production.Culture ;
+select * from Production.Document ;
+select * from Production.Illustration ;
+select * from Production.Location ;
+select * from Production.Product ;
+select * from Production.ProductCategory ;
+select * from Production.ProductCostHistory ;
+select * from Production.ProductDescription ;
+select * from Production.ProductDocument ;
+select * from Production.ProductInventory ;
+select * from Production.ProductListPriceHistory ;
+select * from Production.ProductModel ;
+select * from Production.ProductModelIllustration ;
+select * from Production.ProductModelProductDescriptionCulture ;
+select * from Production.ProductPhoto ;
+select * from Production.ProductProductPhoto ;
+select * from Production.ProductReview ;
+select * from Production.ProductSubcategory ;
+select * from Production.ScrapReason ;
+select * from Production.TransactionHistory ;
+select * from Production.TransactionHistoryArchive ;
+select * from Production.UnitMeasure ;
+select * from Production.WorkOrder ;
+select * from Production.WorkOrderRouting ;
+;
+;
+select * from Production.Product 
+where SizeUnitMeasureCode is not null 
+;
+;
+select * from Production.Product ;
+select * from Production.ProductSubcategory ;
+select * from Production.ProductCategory ;
+;
+select p.ProductID, p.Name, p.ProductLine, ps.ProductSubCategoryID 
+from Production.Product P 
+     left join Production.ProductSubCategory PS on p.ProductSubCategoryID = ps.ProductSubCategoryID 
+--where ps.ProductSubCategoryID is not null
+;
+;
+-- Products in ProductSubCategories 
+select ps.ProductSubCategoryID ,count(p.ProductID) as 'Products' , p.ProductLine
+from Production.Product P 
+     left join Production.ProductSubCategory PS on p.ProductSubCategoryID = ps.ProductSubCategoryID 
+where ps.ProductSubCategoryID is not null 
+group by p.ProductLine, ps.ProductSubCategoryID 
+order by count(p.ProductID) desc 
+;
+;
+select * from Production.ProductSubcategory ;
+select * from Production.ProductCategory ;
+select * from Production.Product ;
+;
+--ProductSubCategories in ProductCategories 
+select pc.ProductCategoryID, pc.Name , count(psc.ProductSubcategoryID) as 'ProductSubCategories Nr'
+from Production.ProductSubCategory PSC
+     join Production.ProductCategory PC on psc.ProductCategoryID = pc.ProductCategoryID
+group by pc.ProductCategoryID, pc.Name
+order by count(psc.ProductSubcategoryID) desc
+;
+;
+select * from Production.Product ;
+select * from Production.WorkOrder ;
+;
+;
+select wo.WorkOrderID, p.ProductID, wo.OrderQty, p.ListPrice, wo.OrderQty*p.ListPrice as 'Price'
+from Production.WorkOrder WO 
+     left join Production.Product P on wo.ProductID = p.ProductID
+;
+;
+select  count(wo.OrderQty), sum(wo.OrderQty), sum(wo.OrderQty*p.ListPrice) as 'Price'
+from Production.WorkOrder WO 
+       left join Production.Product P on wo.ProductID = p.ProductID
+;
+;
+
+---- to make a join with ProductModelID 
+select * from Production.Product ;
+select * from Production.ProductModel ;
+;
+;
+select count(p.ProductID) as 'Products', pm.ProductModelID, pm.Name 
+from Production.ProductModel PM 
+     right join Production.Product P on pm.ProductModelID = p.ProductModelID
+group by pm.ProductModelID, pm.Name 
+;
+;
+-- Products with ProductModelID 
+select * from Production.Product 
+where ProductModelID is not null 
+;
+;
+select * from Production.Product 
+where ProductmODELid IN (70,71,72,73,74,75,76,77)
+;
+;
