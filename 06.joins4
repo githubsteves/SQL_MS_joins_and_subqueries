@@ -1,0 +1,150 @@
+USE AdventureWorks2012;
+GO
+;
+select * from HumanResources.Department;
+select * from HumanResources.Employee;
+select * from HumanResources.EmployeeDepartmentHistory;
+select * from HumanResources.EmployeePayHistory;
+select * from HumanResources.JobCandidate;
+select * from HumanResources.Shift;
+;
+;
+select e.BusinessEntityID, edh.DepartmentID, edh.ShiftID 
+from HumanResources.Employee E
+     join HumanResources.EmployeeDepartmentHistory EDH
+	      on e.BusinessEntityID = edh.BusinessEntityID 
+where edh.EndDate is null
+;
+;
+select e.BusinessEntityID, edh.DepartmentID, d.Name, edh.ShiftID, s.name 
+from HumanResources.Employee E
+     join HumanResources.EmployeeDepartmentHistory EDH on e.BusinessEntityID = edh.BusinessEntityID 
+	 left join HumanResources.Shift S on edh.ShiftID = s.ShiftID 
+	 left join HumanResources.Department D on edh.DepartmentID = d.DepartmentID
+where edh.EndDate is null
+;
+;
+select * from Person.Person  
+;
+;
+select e.BusinessEntityID, pp.FirstName, pp.LastName,pp.PersonType, edh.DepartmentID, d.Name, edh.ShiftID, s.name 
+from HumanResources.Employee E
+     join HumanResources.EmployeeDepartmentHistory EDH on e.BusinessEntityID = edh.BusinessEntityID 
+	 left join HumanResources.Shift S on edh.ShiftID = s.ShiftID 
+	 left join HumanResources.Department D on edh.DepartmentID = d.DepartmentID
+	 left join Person.Person PP on e.BusinessEntityID = pp.BusinessEntityID 
+where edh.EndDate is null
+;
+;
+
+select * from Person.Address
+select * from Person.AddressType
+select * from Person.BusinessEntity
+select * from Person.BusinessEntityAddress
+select * from Person.BusinessEntityContact 
+select * from Person.ContactType
+select * from Person.CountryRegion 
+select * from Person.EmailAddress
+select * from Person.Password
+select * from Person.Person
+select * from Person.PersonPhone 
+select * from Person.PhoneNumberType 
+select * from Person.StateProvince 
+;
+;
+select bea.BusinessEntityID, bea.AddressID, a.AddressLine1, a.City , bea.AddressTypeID, at.Name, pp.PersonType 
+from Person.BusinessEntityAddress BEA
+     join Person.Address A       on bea.AddressID = a.AddressID
+	 join Person.AddressType AT  on bea.AddressTypeID = at.AddressTypeID 
+	 join Person.Person PP       on bea.BusinessEntityID = pp.BusinessEntityID 
+where pp.PersonType in ('EM','SP')
+order by bea.BusinessEntityID asc 
+;
+;
+select * from Person.Person
+select * from Person.Password
+select * from Person.EmailAddress
+select * from Person.PersonPhone 
+;
+;
+select pp.BusinessEntityID, pp.FirstName, pp.LastName, ea.EmailAddress, ppp.PhoneNumber, p.PasswordHash 
+from Person.Person PP 
+     left join Person.EmailAddress EA on pp.BusinessEntityID = ea.BusinessEntityID 
+	 left join Person.Password P      on pp.BusinessEntityID = p.BusinessEntityID 
+	 join      Person.PersonPhone PPP on pp.BusinessEntityID = ppp.BusinessEntityID 
+where pp.BusinessEntityID between 1 and 290
+order by pp.businessEntityID asc 
+;
+;
+select * from Person.Person ;
+
+select *
+from Person.Person 
+where PersonType = 'EM' or PersonType like 'SP'
+;
+;
+select * from Purchasing.ProductVendor;
+select * from Purchasing.PurchaseOrderDetail;
+select * from Purchasing.PurchaseOrderHeader;
+select * from Purchasing.ShipMethod;
+select * from Purchasing.Vendor;
+select * from Production.Product;
+;
+;
+select count(ProductID),BusinessEntityID
+from Purchasing.ProductVendor
+group by BusinessEntityID 
+;
+;
+select pv.ProductID, pp.Name, pp.ProductNumber, pv.BusinessEntityID, pv.OnOrderQty
+from Purchasing.ProductVendor PV
+     left join Production.Product PP on pv.ProductID = pp.ProductID 
+order by pv.BusinessEntityID, pv.ProductID 
+;
+;
+select * from Purchasing.ProductVendor;
+select * from Purchasing.Vendor;
+;
+;
+select count(pv.ProductID) as 'Products', pv.BusinessEntityID, v.Name , v.CreditRating 
+from Purchasing.ProductVendor PV 
+     join Purchasing.Vendor V on pv.BusinessEntityID = v.BusinessEntityID 
+--where v.CreditRating <> '1' and v.CreditRating <> '2'
+group by pv.BusinessEntityID, v.Name, v.CreditRating 
+order by count(pv.ProductID) desc 
+
+-- For evry BusinessEntity productid and the names of the products
+select * from Purchasing.ProductVendor;
+select * from Purchasing.Vendor;
+select * from Production.Product;
+;
+;
+select pv.BusinessEntityID, v.Name, count(pv.ProductID), p.Name, pv.StandardPrice, pv.OnOrderQty, 
+       pv.StandardPrice*pv.OnOrderQty as 'Price'
+from Purchasing.ProductVendor PV 
+     left join Purchasing.Vendor V on pv.BusinessEntityID = v.BusinessEntityID 
+	 left join Production.Product P on pv.ProductID = p.ProductID
+where pv.OnOrderQty is null  
+group by pv.BusinessEntityID, v.Name
+--group by pv.BusinessEntityID, v.Name 
+--order by pv.BusinessEntityID, pv.ProductID 
+
+;
+select pv.BusinessEntityID, v.Name, count(pv.ProductID) as 'Nr of Products', sum(pv.StandardPrice*pv.OnOrderQty) as 'Price'
+from Purchasing.ProductVendor PV 
+     left join Purchasing.Vendor V on pv.BusinessEntityID = v.BusinessEntityID 
+	 left join Production.Product P on pv.ProductID = p.ProductID
+where pv.OnOrderQty is  null 
+group by pv.BusinessEntityID, v.Name 
+order by sum(pv.StandardPrice* pv.OnOrderQty) asc
+;
+;
+select pv.BusinessEntityID, v.Name, count(pv.ProductID), 
+      sum( pv.StandardPrice*pv.OnOrderQty) as 'Price'
+from Purchasing.ProductVendor PV 
+     left join Purchasing.Vendor V on pv.BusinessEntityID = v.BusinessEntityID 
+	 left join Production.Product P on pv.ProductID = p.ProductID
+where pv.OnOrderQty is null  
+group by pv.BusinessEntityID, v.Name
+--group by pv.BusinessEntityID, v.Name 
+--order by pv.BusinessEntityID, pv.ProductID 
