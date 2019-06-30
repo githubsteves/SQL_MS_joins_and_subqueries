@@ -1,0 +1,125 @@
+-- SALES SCHEMA 
+
+USE AdventureWorks2012;
+GO
+
+select * from Sales.CountryRegionCurrency;
+select * from Sales.CreditCard;
+select * from Sales.Currency;
+select * from Sales.CurrencyRate;
+select * from Sales.Customer;
+select * from Sales.PersonCreditCard;
+select * from Sales.SalesOrderDetail;
+select * from Sales.SalesOrderHeader;
+select * from Sales.SalesOrderHeaderSalesReason;
+select * from Sales.SalesPerson;
+select * from Sales.SalesPersonQuotaHistory;
+select * from Sales.SalesReason;
+select * from Sales.SalesTaxRate;
+select * from Sales.SalesTerritory;
+select * from Sales.SalesTerritoryHistory;
+select * from Sales.ShoppingCartItem;
+select * from Sales.SpecialOffer;
+select * from Sales.SpecialOfferProduct;
+select * from Sales.Store;
+select * from Person.Person 
+
+;
+;
+select * from Sales.CreditCard;
+select CrediTCardID, CardNumber, ExpMonth, ExpYear 
+from Sales.CreditCard
+where CardNumber like '3333%66%'
+and ExpYear in (2006)
+;
+select * from Person.Person ;
+select * from Sales.PersonCreditCard;
+select * from Sales.CreditCard
+;
+;
+select p.BusinessEntityID, p.FirstName, p.MiddleName, p.LastName, pcc.CrediTCardID, cc.CardNumber, cc.ExpMonth, cc.ExpYear 
+from Person.Person P 
+     left join Sales.PersonCreditCard PCC on p.BusinessEntityID = pcc.BusinessEntityID 
+	 left join Sales.CreditCard CC on pcc.CreditCardID = cc.CreditCardID 
+where pcc.CreditCardID is not null 
+      --and cc.ExpMonth = '3' and cc.ExpYear = '2005'
+order by p.BusinessEntityID 
+
+
+
+select * from Sales.SalesOrderHeaderSalesReason;
+select * from Sales.SalesReason;
+select * from Sales.SalesPerson;
+select * from Sales.SalesOrderDetail;
+select * from Sales.SalesOrderHeader;
+select * from Sales.Customer;
+
+select soh.SalesOrderID, soh.CustomerID, sod.SalesOrderDetailID, sod.OrderQty, sod.LineTotal
+from Sales.SalesOrderHeader SOH
+     join Sales.SalesOrderDetail SOD on soh.SalesOrderID = sod.SalesOrderID 
+	 
+;
+;
+select soh.SalesOrderID, soh.CustomerID, count(sod.OrderQty) as 'Products' , sum(sod.LineTotal) as 'Amount'
+from Sales.SalesOrderHeader SOH
+     join Sales.SalesOrderDetail SOD on soh.SalesOrderID = sod.SalesOrderID 
+group by soh.SalesOrderID, soh.CustomerID 
+;
+;
+select soh.SalesOrderID, soh.CustomerID, count(sod.OrderQty) as 'Products' , sum(sod.LineTotal) as 'Amount'
+from Sales.SalesOrderHeader SOH
+     join Sales.SalesOrderDetail SOD on soh.SalesOrderID = sod.SalesOrderID 
+	 join Sales.Customer C on soh.CustomerID = c.CustomerID 
+group by soh.SalesOrderID, soh.CustomerID 
+;
+;
+select soh.SalesOrderID, soh.CustomerID, sohsr.SalesReasonID, sr.Name, sr.ReasonType 
+from Sales.SalesOrderHeader SOH 
+	 left join Sales.SalesOrderHeaderSalesReason SOHSR on soh.SalesOrderID = sohsr.SalesOrderID 
+	 left join Sales.SalesReason SR on sohsr.SalesReasonID = sr.SalesReasonID 
+
+
+select * from Sales.SalesOrderHeaderSalesReason; --27 647 
+select distinct SalesOrderID 
+from Sales.SalesOrderHeaderSalesReason; --- 23 012   (4 635)
+;
+;
+select * from Sales.SalesOrderDetail;
+select * from Sales.SalesOrderHeader;
+;
+;
+select  top 5 soh.SalesOrderID, count(sod.OrderQty), count(sod.ProductID) , sum(sod.LineTotal) --soh.TerritoryID, soh.ShipMethodID
+from Sales.SalesOrderHeader SOH
+     left join Sales.SalesOrderDetail SOD on soh.SalesOrderID = sod.SalesOrderID 
+group by soh.SalesOrderID 
+order by sum(sod.LineTotal) desc 
+;
+;
+select * from Sales.SalesOrderHeader
+where SalesOrderID in (51131,55282,46616,46981,47395)
+;
+select * from Sales.SalesOrderDetail;
+select * from Sales.SalesOrderHeader;
+select * from Sales.SalesTerritory;
+;
+select  soh.SalesOrderID, count(sod.OrderQty), count(sod.ProductID) , sum(sod.LineTotal),  
+st.Name, st.CountryRegionCode 
+from Sales.SalesOrderHeader SOH 
+     left join Sales.SalesOrderDetail SOD on soh.SalesOrderID = sod.SalesOrderID 
+	 join Sales.SalesTerritory ST on soh.TerritoryID = st.TerritoryID 
+--where st.Name = 'France'
+group by soh.SalesOrderID, st.Name, st.CountryRegionCode
+order by st.Name asc
+;
+;
+select * from Sales.SpecialOffer;
+select * from Sales.SpecialOfferProduct;
+select * from Production.Product; 
+;
+;
+select sop.SpecialOfferID, sop.ProductID, p.Name, p.ListPrice, so.Description, so.DiscountPct, 
+       p.ListPrice - p.ListPrice*so.DiscountPct as 'New Price after Discount'
+from Sales.SpecialOfferProduct SOP 
+     left join Production.Product P on sop.ProductID = p.ProductID 
+	 join      Sales.SpecialOffer SO on sop.SpecialOfferID = so.SpecialOfferID 
+order by so.DiscountPct desc , sop.ProductID asc
