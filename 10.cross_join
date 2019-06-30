@@ -1,0 +1,13 @@
+-- CROSS JOIN TEST 
+USE TEST
+GO
+;
+;
+select * from dbo.Employee2
+
+select * from TEST.dbo.student
+select * from AdventureWorks2012.Production.ProductCategory
+
+select * 
+from TEST.dbo.student 
+     cross join AdventureWorks2012.Production.ProductCategory
