@@ -8,3 +8,15 @@ select * from Sales.Customer ;
 select * from Sales.Store ;
 select * from Sales.
 
+select * from dbo.BigOrders;
+select * from dbo.Categories;
+select * from dbo.Customers;
+select * from dbo.Employees;
+select * from dbo.EmployeeTerritories;
+select * from dbo.HugeOrders;
+select * from dbo.[Order Details];
+select * from dbo.Orders;
+select * from dbo.Products;
+select * from dbo.Region;
+select * from dbo.Suppliers;
+;
