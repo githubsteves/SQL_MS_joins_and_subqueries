@@ -1,0 +1,82 @@
+USE Northwind2;
+GO
+;
+select * from dbo.BigOrders;
+select * from dbo.Categories;
+select * from dbo.Customers;
+select * from dbo.Employees;
+select * from dbo.EmployeeTerritories;
+select * from dbo.HugeOrders;
+select * from dbo.[Order Details];
+select * from dbo.Orders;
+select * from dbo.Products;
+select * from dbo.Region;
+select * from dbo.Suppliers;
+;
+;
+select count(distinct OrderID)
+from dbo.BigOrders 
+;
+select bo.OrderID, bo.EmployeeID, c.CustomerID, c.CompanyName, c.City, c.Country
+from dbo.BigOrders BO 
+     join dbo.Customers C on  bo.CustomerID = c.CustomerID 
+;
+;
+select count(DISTINCT bo.OrderID),  c.CustomerID, c.CompanyName, c.City, c.Country
+from dbo.BigOrders BO 
+     join dbo.Customers C on  bo.CustomerID = c.CustomerID 
+group by  c.CustomerID, c.CompanyName, c.City, c.Country
+order by count( DISTINCT bo.OrderID) desc 
+;
+;
+select DISTINCT OrderID, CustomerID 
+from dbo.BigOrders 
+where CustomerID = 'VINET'
+;
+;
+select top 5 count(distinct bo.OrderID), e.EmployeeID, e.FirstName, e.LastName 
+from dbo.BigOrders BO 
+     join dbo.Employees E on bo.EmployeeID = e.EmployeeID 
+group by e.EmployeeID, e.FirstName, e.LastName 
+order by count(distinct bo.OrderID) asc 
+
+;
+;
+select * from dbo.[Order Details];
+select * from dbo.Products;
+select * from dbo.Orders;
+;
+;
+select o.OrderID, O.CustomerID, od.ProductID, od.UnitPrice, od.Quantity 
+from dbo.Orders O 
+     left join dbo.[Order Details] OD on o.OrderID = od.OrderID 
+order by od.Quantity desc 
+;
+select o.OrderID, O.CustomerID, od.ProductID, od.UnitPrice, od.Quantity 
+from dbo.Orders O 
+     left join dbo.[Order Details] OD on o.OrderID = od.OrderID 
+order by od.UnitPrice desc 
+;
+select o.OrderID, count(od.ProductID) as 'Products in Order'
+       , sum(od.UnitPrice*od.Quantity) as 'Price per Order'
+from dbo.Orders O 
+     left join dbo.[Order Details] OD on o.OrderID = od.OrderID 
+group by o.OrderID
+order by sum(od.UnitPrice*od.Quantity) desc
+;
+;
+select * from dbo.[Order Details];
+select * from dbo.Products;
+select * from dbo.Orders;
+;
+;
+select  count(od.ProductID) as 'Products altogether' , p.ProductName 
+from dbo.[Order Details] OD 
+     join dbo.Products P on od.ProductID = p.productID 
+group by p.ProductName
+order by count(od.ProductID) desc 
+;
+;
+select * from dbo.Territories 
+;
+;
