@@ -1,0 +1,56 @@
+
+select * from Sales.Customers ;
+select * from Sales.Orders ;
+select * from Sales.OrderDetails ;
+;
+
+select c.custid, c.companyname, o.orderid 
+from Sales.Customers C 
+     left join Sales.Orders O on c.custid = o.custid 
+;
+--- NR of Orders per Customers 
+select c.custid, c.companyname, count(o.orderid) as 'Nr of Orders per Customers'
+from Sales.Customers C 
+     left join Sales.Orders O on c.custid = o.custid 
+group by c.custid, c.companyname 
+order by count(o.orderid) desc 
+;
+;
+---Sales Amount per OrderID 
+select c.custid, c.companyname, o.orderid, od.unitprice*od.qty as 'SalesAmount'
+from Sales.Customers C 
+     left join Sales.Orders O on c.custid = o.custid 
+	 left join Sales.OrderDetails OD on o.orderid = od.orderid 
+;
+select c.custid, c.companyname, count(o.orderid) as 'Nr of Orders', sum(od.unitprice*od.qty) as 'TotalSalesAmount per Order',
+       max(od.unitprice*od.qty) as 'MaxSalesAmount per Order'
+from Sales.Customers C 
+     left join Sales.Orders O on c.custid = o.custid 
+	 left join Sales.OrderDetails OD on o.orderid = od.orderid 
+group by c.custid, c.companyname 
+order by sum(od.unitprice*od.qty) desc 
+
+-- How to calculate a discount 
+select * from Sales.OrderDetails ;
+
+select orderid, unitprice, qty, discount, unitprice*qty as 'TotalAmount'
+from Sales.OrderDetails 
+where unitprice*qty = 100
+;
+;
+select orderid, unitprice, qty, discount, unitprice*qty as 'TotalAmount',(unitprice*qty)*discount ,
+ (unitprice*qty)-(unitprice*qty)*discount 
+from Sales.OrderDetails 
+where unitprice*qty = 100
+;
+;
+select orderid, unitprice, qty, discount, unitprice*qty as 'TotalAmount',(unitprice*qty)*discount ,
+ (unitprice*qty)-(unitprice*qty)*discount 
+from Sales.OrderDetails 
+where unitprice*qty = 100
+;
+;
+select orderid, unitprice, qty, discount, unitprice*qty as 'TotalAmount',(unitprice*qty)*discount ,
+(unitprice*qty)-(unitprice*qty)*discount 
+from Sales.OrderDetails 
+
