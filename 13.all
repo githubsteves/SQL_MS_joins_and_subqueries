@@ -1,0 +1,927 @@
+USE AdventureWorks2012;
+GO
+select * from Production.Product 
+;
+select * from Production.WorkOrder
+;
+select pp.ProductID, pw.OrderQty
+from  Production.Product PP inner join Production.WorkOrder PW
+                          on pp.ProductID = pw.ProductID 
+
+;
+
+select pp.ProductID, pp.Name, pp.ListPrice, pw.OrderQty
+from Production.Product PP
+     left join Production.WorkOrder PW
+	      on pp.ProductID = pw.ProductID
+;
+
+select * from HumanResources.Department HD
+;
+select * from HumanResources.Employee HE
+;
+select * from HumanResources.EmployeeDepartmentHistory HEDH
+;
+
+select HE.BusinessEntityID, HE.JobTitle, HE.OrganizationLevel, HEDH.DepartmentID,HEDH.EndDate, HD.Name
+from HumanResources.Employee HE 
+     left join HumanResources.EmployeeDepartmentHistory HEDH
+	      on HE.BusinessEntityID = HEDH.BusinessEntityID
+	 left join HumanResources.Department HD 
+          on HEDH.DepartmentID = HD.DepartmentID
+;
+select * from HumanResources.Employee HE
+select * from Person.Person PP
+;
+select pp.BusinessEntityID, pp.FirstName, pp.LastName, he.JobTitle
+from Person.Person PP 
+     left join HumanResources.Employee HE 
+	      on pp.BusinessEntityID = he.BusinessEntityID
+;
+select pp.BusinessEntityID, pp.FirstName, pp.LastName, he.JobTitle
+from Person.Person PP 
+     inner join HumanResources.Employee HE 
+	      on pp.BusinessEntityID = he.BusinessEntityID
+;
+select * from HumanResources.EmployeePayHistory
+select * from HumanResources.JobCandidate 
+;
+select * from Person.Person 
+;
+select * from Person.Address
+select * from Person.AddressType
+select * from Person.BusinessEntityAddress
+;
+select pp.BusinessEntityID, pp.FirstName, pp.LastName, pbea.AddressID
+from Person.Person PP
+     left join Person.BusinessEntityAddress PBEA
+	      on pp.BusinessEntityID = pbea.BusinessEntityID
+;
+
+---------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------
+
+select * from Production.Product ;
+select * from Production.ProductModel;
+select * from Production.WorkOrder ;
+
+select pp.ProductID, pp.Name, pwo.StartDate 
+from Production.WorkOrder PWO
+     left join Production.Product PP
+	      on pp.ProductID = pwo.ProductID 
+
+;
+select pp.ProductID, pp.Name, pwo.StartDate 
+from Production.Product PP 
+     left join Production.WorkOrder PWO
+	      on pp.ProductID = pwo.ProductID 
+;
+select pp.ProductID, pp.Name, pwo.StartDate 
+from Production.Product PP 
+     left join Production.WorkOrder PWO
+	      on pp.ProductID = pwo.ProductID 
+where pp.ProductID in (492,933,435)
+
+--- No sold products from type (492,933,435)
+;
+;
+;
+select distinct pp.ProductID, pp.Name, pwo.StartDate 
+from Production.WorkOrder PWO
+     left join Production.Product PP
+	      on pp.ProductID = pwo.ProductID 
+where pwo.StartDate between '2006-01-01' and '2006-12-31'
+;
+;
+select * from Production.Product; -- PP
+select * from Sales.SalesOrderDetail; -- SOD
+;
+;
+select sod.SalesOrderID, sod.LineTotal
+from Sales.SalesOrderDetail SOD
+     left join Production.Product PP on sod.ProductID = pp.ProductID 
+;
+;
+select * from Sales.SalesPerson ;
+select * from Person.Person ;
+select * from Sales.Customer ; 
+select * from Sales.Store ;
+select * from Sales.
+
+-------------------------------------------------------------------------------------------
+
+USE TSQL2012;
+GO
+;
+;
+select * from Production.Categories;
+select * from Production.Products;
+select * from Production.Suppliers;
+select * from Sales.Customers; -- SCU
+select * from Sales.OrderDetails; -- SOD
+select * from Sales.Orders; -- SO
+;
+;
+select so.orderid, so.custid, scu.companyname, scu.city, scu.country
+from Sales.Orders SO
+     left join Sales.Customers SCU on so.custid = scu.custid
+--where scu.country in ('Spain','Italy','USA')
+--order by scu.country asc 
+;
+;
+select so.orderid, so.custid, scu.companyname, scu.city, scu.country, sum(sod.unitprice *sod.qty) as 'Amount'
+from Sales.Orders SO
+     left join Sales.OrderDetails SOD  on sod.orderid = so.orderid
+	 join Sales.Customers SCU on so.custid = scu.custid
+where so.custid in (1,2,3,4,5,6,7,8,9,10)
+group by so.orderid, so.custid, scu.companyname, scu.city, scu.country
+order by custid, sum(sod.unitprice*sod.qty) desc
+;
+select sod.orderid, sum(sod.unitprice * sod.qty) as 'Amount'
+from Sales.OrderDetails SOD
+group by sod.orderid
+;
+;
+select so.orderid, so.custid, scu.companyname, scu.city, scu.country
+from Sales.Orders SO
+     left join Sales.Customers SCU on so.custid = scu.custid
+where scu.country in ('Spain','Italy','USA')
+order by scu.country asc 
+;
+select * from Production.Categories     --PC  ;
+select * from Production.Products  /* -- PP */ ;
+select * from Production.Suppliers /* -- PS */;
+select * from Sales.Customers; -- SCU
+select * from Sales.OrderDetails; -- SOD
+select * from Sales.Orders; -- SO   
+select * from HR.Employees -- HE
+;
+;
+select pp.productid, pp.productname, pc.categoryid, pc.categoryname 
+from Production.Products PP
+     left join Production.Categories PC on pp.categoryid = pc.categoryid 
+--where pp.productname like 'Product A%'
+;
+select count(pp.productid) as 'Products in each category', pc.categoryid, pc.categoryname 
+from Production.Products PP
+     left join Production.Categories PC on pp.categoryid = pc.categoryid 
+group by pc.categoryid, pc.categoryname 
+order by count(pp.productid) desc 
+;
+;
+select pp.productid, pp.productname, pc.categoryid, pc.categoryname 
+from Production.Products PP
+     left join Production.Categories PC on pp.categoryid = pc.categoryid 
+;
+;
+select pp.productid, pp.productname, pp.unitprice, ps.supplierid, ps.companyname, ps.contactname, ps.city, ps.country
+from Production.Products PP 
+     left join Production.Suppliers PS on pp.supplierid = ps.supplierid
+;
+;
+select count(pp.productid) as 'NR of products by supplier' , ps.supplierid, ps.companyname
+from Production.Products PP 
+     left join Production.Suppliers PS on pp.supplierid = ps.supplierid
+group by ps.supplierid, ps.companyname, ps.contactname 
+;
+;
+select distinct companyname from Production.Suppliers
+;
+;
+select * from Production.Categories     --PC  ;
+select * from Production.Products  /* -- PP */ ;
+select * from Production.Suppliers /* -- PS */;
+select * from Sales.Customers; -- SCU
+select * from Sales.OrderDetails; -- SOD
+select * from Sales.Orders; -- SO   
+select * from HR.Employees -- HE
+select * from Sales.Shippers -- SH
+;
+;
+select so.orderid, so.custid, he.empid, he.firstname, he.lastname, he.title
+from Sales.Orders SO 
+     left join HR.Employees HE on so.empid = he.empid 
+;
+;
+select count(so.orderid) as 'Nr OF ORDERS MAKE BY EMPLOYEE', he.empid, he.firstname, he.lastname, he.title
+from Sales.Orders SO 
+     left join HR.Employees HE on so.empid = he.empid 
+group by he.empid, he.firstname, he.lastname, he.title
+order by count(so.orderid) desc 
+;
+;
+select count(so.orderid) as 'Orders by Shipper Companies', sh.shipperid, sh.companyname, sh.phone
+from Sales.Orders SO 
+     join Sales.Shippers SH on so.shipperid = sh.shipperid 
+group by sh.shipperid, sh.companyname, sh.phone 
+order by count(so.orderid) desc
+
+
+---------------------------------------------------------------------------------------------------------
+USE Northwind2;
+GO
+;
+select * from dbo.BigOrders;
+select * from dbo.Categories;
+select * from dbo.Customers;
+select * from dbo.Employees;
+select * from dbo.EmployeeTerritories;
+select * from dbo.HugeOrders;
+select * from dbo.[Order Details];
+select * from dbo.Orders;
+select * from dbo.Products;
+select * from dbo.Region;
+select * from dbo.Suppliers;
+;
+;
+select count(distinct OrderID)
+from dbo.BigOrders 
+;
+select bo.OrderID, bo.EmployeeID, c.CustomerID, c.CompanyName, c.City, c.Country
+from dbo.BigOrders BO 
+     join dbo.Customers C on  bo.CustomerID = c.CustomerID 
+;
+;
+select count(DISTINCT bo.OrderID),  c.CustomerID, c.CompanyName, c.City, c.Country
+from dbo.BigOrders BO 
+     join dbo.Customers C on  bo.CustomerID = c.CustomerID 
+group by  c.CustomerID, c.CompanyName, c.City, c.Country
+order by count( DISTINCT bo.OrderID) desc 
+;
+;
+select DISTINCT OrderID, CustomerID 
+from dbo.BigOrders 
+where CustomerID = 'VINET'
+;
+;
+select top 5 count(distinct bo.OrderID), e.EmployeeID, e.FirstName, e.LastName 
+from dbo.BigOrders BO 
+     join dbo.Employees E on bo.EmployeeID = e.EmployeeID 
+group by e.EmployeeID, e.FirstName, e.LastName 
+order by count(distinct bo.OrderID) asc 
+
+;
+;
+select * from dbo.[Order Details];
+select * from dbo.Products;
+select * from dbo.Orders;
+;
+;
+select o.OrderID, O.CustomerID, od.ProductID, od.UnitPrice, od.Quantity 
+from dbo.Orders O 
+     left join dbo.[Order Details] OD on o.OrderID = od.OrderID 
+order by od.Quantity desc 
+;
+select o.OrderID, O.CustomerID, od.ProductID, od.UnitPrice, od.Quantity 
+from dbo.Orders O 
+     left join dbo.[Order Details] OD on o.OrderID = od.OrderID 
+order by od.UnitPrice desc 
+;
+select o.OrderID, count(od.ProductID) as 'Products in Order'
+       , sum(od.UnitPrice*od.Quantity) as 'Price per Order'
+from dbo.Orders O 
+     left join dbo.[Order Details] OD on o.OrderID = od.OrderID 
+group by o.OrderID
+order by sum(od.UnitPrice*od.Quantity) desc
+;
+;
+select * from dbo.[Order Details];
+select * from dbo.Products;
+select * from dbo.Orders;
+;
+;
+select  count(od.ProductID) as 'Products altogether' , p.ProductName 
+from dbo.[Order Details] OD 
+     join dbo.Products P on od.ProductID = p.productID 
+group by p.ProductName
+order by count(od.ProductID) desc 
+;
+;
+select * from dbo.Territories 
+;
+;
+------------------------------------------------------------------------------------------------------------------
+USE AdventureWorks2012;
+GO
+;
+select * from HumanResources.Department;
+select * from HumanResources.Employee;
+select * from HumanResources.EmployeeDepartmentHistory;
+select * from HumanResources.EmployeePayHistory;
+select * from HumanResources.JobCandidate;
+select * from HumanResources.Shift;
+;
+;
+select e.BusinessEntityID, edh.DepartmentID, edh.ShiftID 
+from HumanResources.Employee E
+     join HumanResources.EmployeeDepartmentHistory EDH
+	      on e.BusinessEntityID = edh.BusinessEntityID 
+where edh.EndDate is null
+;
+;
+select e.BusinessEntityID, edh.DepartmentID, d.Name, edh.ShiftID, s.name 
+from HumanResources.Employee E
+     join HumanResources.EmployeeDepartmentHistory EDH on e.BusinessEntityID = edh.BusinessEntityID 
+	 left join HumanResources.Shift S on edh.ShiftID = s.ShiftID 
+	 left join HumanResources.Department D on edh.DepartmentID = d.DepartmentID
+where edh.EndDate is null
+;
+;
+select * from Person.Person  
+;
+;
+select e.BusinessEntityID, pp.FirstName, pp.LastName,pp.PersonType, edh.DepartmentID, d.Name, edh.ShiftID, s.name 
+from HumanResources.Employee E
+     join HumanResources.EmployeeDepartmentHistory EDH on e.BusinessEntityID = edh.BusinessEntityID 
+	 left join HumanResources.Shift S on edh.ShiftID = s.ShiftID 
+	 left join HumanResources.Department D on edh.DepartmentID = d.DepartmentID
+	 left join Person.Person PP on e.BusinessEntityID = pp.BusinessEntityID 
+where edh.EndDate is null
+;
+;
+
+select * from Person.Address
+select * from Person.AddressType
+select * from Person.BusinessEntity
+select * from Person.BusinessEntityAddress
+select * from Person.BusinessEntityContact 
+select * from Person.ContactType
+select * from Person.CountryRegion 
+select * from Person.EmailAddress
+select * from Person.Password
+select * from Person.Person
+select * from Person.PersonPhone 
+select * from Person.PhoneNumberType 
+select * from Person.StateProvince 
+;
+;
+select bea.BusinessEntityID, bea.AddressID, a.AddressLine1, a.City , bea.AddressTypeID, at.Name, pp.PersonType 
+from Person.BusinessEntityAddress BEA
+     join Person.Address A       on bea.AddressID = a.AddressID
+	 join Person.AddressType AT  on bea.AddressTypeID = at.AddressTypeID 
+	 join Person.Person PP       on bea.BusinessEntityID = pp.BusinessEntityID 
+where pp.PersonType in ('EM','SP')
+order by bea.BusinessEntityID asc 
+;
+;
+select * from Person.Person
+select * from Person.Password
+select * from Person.EmailAddress
+select * from Person.PersonPhone 
+;
+;
+select pp.BusinessEntityID, pp.FirstName, pp.LastName, ea.EmailAddress, ppp.PhoneNumber, p.PasswordHash 
+from Person.Person PP 
+     left join Person.EmailAddress EA on pp.BusinessEntityID = ea.BusinessEntityID 
+	 left join Person.Password P      on pp.BusinessEntityID = p.BusinessEntityID 
+	 join      Person.PersonPhone PPP on pp.BusinessEntityID = ppp.BusinessEntityID 
+where pp.BusinessEntityID between 1 and 290
+order by pp.businessEntityID asc 
+;
+;
+select * from Person.Person ;
+
+select *
+from Person.Person 
+where PersonType = 'EM' or PersonType like 'SP'
+;
+;
+select * from Purchasing.ProductVendor;
+select * from Purchasing.PurchaseOrderDetail;
+select * from Purchasing.PurchaseOrderHeader;
+select * from Purchasing.ShipMethod;
+select * from Purchasing.Vendor;
+select * from Production.Product;
+;
+;
+select count(ProductID),BusinessEntityID
+from Purchasing.ProductVendor
+group by BusinessEntityID 
+;
+;
+select pv.ProductID, pp.Name, pp.ProductNumber, pv.BusinessEntityID, pv.OnOrderQty
+from Purchasing.ProductVendor PV
+     left join Production.Product PP on pv.ProductID = pp.ProductID 
+order by pv.BusinessEntityID, pv.ProductID 
+;
+;
+select * from Purchasing.ProductVendor;
+select * from Purchasing.Vendor;
+;
+;
+select count(pv.ProductID) as 'Products', pv.BusinessEntityID, v.Name , v.CreditRating 
+from Purchasing.ProductVendor PV 
+     join Purchasing.Vendor V on pv.BusinessEntityID = v.BusinessEntityID 
+--where v.CreditRating <> '1' and v.CreditRating <> '2'
+group by pv.BusinessEntityID, v.Name, v.CreditRating 
+order by count(pv.ProductID) desc 
+
+-- For evry BusinessEntity productid and the names of the products
+select * from Purchasing.ProductVendor;
+select * from Purchasing.Vendor;
+select * from Production.Product;
+;
+;
+select pv.BusinessEntityID, v.Name, count(pv.ProductID), p.Name, pv.StandardPrice, pv.OnOrderQty, 
+       pv.StandardPrice*pv.OnOrderQty as 'Price'
+from Purchasing.ProductVendor PV 
+     left join Purchasing.Vendor V on pv.BusinessEntityID = v.BusinessEntityID 
+	 left join Production.Product P on pv.ProductID = p.ProductID
+where pv.OnOrderQty is null  
+group by pv.BusinessEntityID, v.Name
+--group by pv.BusinessEntityID, v.Name 
+--order by pv.BusinessEntityID, pv.ProductID 
+
+;
+select pv.BusinessEntityID, v.Name, count(pv.ProductID) as 'Nr of Products', sum(pv.StandardPrice*pv.OnOrderQty) as 'Price'
+from Purchasing.ProductVendor PV 
+     left join Purchasing.Vendor V on pv.BusinessEntityID = v.BusinessEntityID 
+	 left join Production.Product P on pv.ProductID = p.ProductID
+where pv.OnOrderQty is  null 
+group by pv.BusinessEntityID, v.Name 
+order by sum(pv.StandardPrice* pv.OnOrderQty) asc
+;
+;
+select pv.BusinessEntityID, v.Name, count(pv.ProductID), 
+      sum( pv.StandardPrice*pv.OnOrderQty) as 'Price'
+from Purchasing.ProductVendor PV 
+     left join Purchasing.Vendor V on pv.BusinessEntityID = v.BusinessEntityID 
+	 left join Production.Product P on pv.ProductID = p.ProductID
+where pv.OnOrderQty is null  
+group by pv.BusinessEntityID, v.Name
+--group by pv.BusinessEntityID, v.Name 
+--order by pv.BusinessEntityID, pv.ProductID 
+
+-----------------------------------------------------------------------------------------------
+
+select * from Sales.Customers ;
+select * from Sales.Orders ;
+select * from Sales.OrderDetails ;
+;
+
+select c.custid, c.companyname, o.orderid 
+from Sales.Customers C 
+     left join Sales.Orders O on c.custid = o.custid 
+;
+--- NR of Orders per Customers 
+select c.custid, c.companyname, count(o.orderid) as 'Nr of Orders per Customers'
+from Sales.Customers C 
+     left join Sales.Orders O on c.custid = o.custid 
+group by c.custid, c.companyname 
+order by count(o.orderid) desc 
+;
+;
+---Sales Amount per OrderID 
+select c.custid, c.companyname, o.orderid, od.unitprice*od.qty as 'SalesAmount'
+from Sales.Customers C 
+     left join Sales.Orders O on c.custid = o.custid 
+	 left join Sales.OrderDetails OD on o.orderid = od.orderid 
+;
+select c.custid, c.companyname, count(o.orderid) as 'Nr of Orders', sum(od.unitprice*od.qty) as 'TotalSalesAmount per Order',
+       max(od.unitprice*od.qty) as 'MaxSalesAmount per Order'
+from Sales.Customers C 
+     left join Sales.Orders O on c.custid = o.custid 
+	 left join Sales.OrderDetails OD on o.orderid = od.orderid 
+group by c.custid, c.companyname 
+order by sum(od.unitprice*od.qty) desc 
+
+-- How to calculate a discount 
+select * from Sales.OrderDetails ;
+
+select orderid, unitprice, qty, discount, unitprice*qty as 'TotalAmount'
+from Sales.OrderDetails 
+where unitprice*qty = 100
+;
+;
+select orderid, unitprice, qty, discount, unitprice*qty as 'TotalAmount',(unitprice*qty)*discount ,
+ (unitprice*qty)-(unitprice*qty)*discount 
+from Sales.OrderDetails 
+where unitprice*qty = 100
+;
+;
+select orderid, unitprice, qty, discount, unitprice*qty as 'TotalAmount',(unitprice*qty)*discount ,
+ (unitprice*qty)-(unitprice*qty)*discount 
+from Sales.OrderDetails 
+where unitprice*qty = 100
+;
+;
+select orderid, unitprice, qty, discount, unitprice*qty as 'TotalAmount',(unitprice*qty)*discount ,
+(unitprice*qty)-(unitprice*qty)*discount 
+from Sales.OrderDetails 
+
+
+---
+
+;
+
+------------------------------------------------------------------------------------------------------
+-- SALES SCHEMA 
+
+USE AdventureWorks2012;
+GO
+
+select * from Sales.CountryRegionCurrency;
+select * from Sales.CreditCard;
+select * from Sales.Currency;
+select * from Sales.CurrencyRate;
+select * from Sales.Customer;
+select * from Sales.PersonCreditCard;
+select * from Sales.SalesOrderDetail;
+select * from Sales.SalesOrderHeader;
+select * from Sales.SalesOrderHeaderSalesReason;
+select * from Sales.SalesPerson;
+select * from Sales.SalesPersonQuotaHistory;
+select * from Sales.SalesReason;
+select * from Sales.SalesTaxRate;
+select * from Sales.SalesTerritory;
+select * from Sales.SalesTerritoryHistory;
+select * from Sales.ShoppingCartItem;
+select * from Sales.SpecialOffer;
+select * from Sales.SpecialOfferProduct;
+select * from Sales.Store;
+select * from Person.Person 
+
+;
+;
+select * from Sales.CreditCard;
+select CrediTCardID, CardNumber, ExpMonth, ExpYear 
+from Sales.CreditCard
+where CardNumber like '3333%66%'
+and ExpYear in (2006)
+;
+select * from Person.Person ;
+select * from Sales.PersonCreditCard;
+select * from Sales.CreditCard
+;
+;
+select p.BusinessEntityID, p.FirstName, p.MiddleName, p.LastName, pcc.CrediTCardID, cc.CardNumber, cc.ExpMonth, cc.ExpYear 
+from Person.Person P 
+     left join Sales.PersonCreditCard PCC on p.BusinessEntityID = pcc.BusinessEntityID 
+	 left join Sales.CreditCard CC on pcc.CreditCardID = cc.CreditCardID 
+where pcc.CreditCardID is not null 
+      --and cc.ExpMonth = '3' and cc.ExpYear = '2005'
+order by p.BusinessEntityID 
+
+
+
+select * from Sales.SalesOrderHeaderSalesReason;
+select * from Sales.SalesReason;
+select * from Sales.SalesPerson;
+select * from Sales.SalesOrderDetail;
+select * from Sales.SalesOrderHeader;
+select * from Sales.Customer;
+
+select soh.SalesOrderID, soh.CustomerID, sod.SalesOrderDetailID, sod.OrderQty, sod.LineTotal
+from Sales.SalesOrderHeader SOH
+     join Sales.SalesOrderDetail SOD on soh.SalesOrderID = sod.SalesOrderID 
+	 
+;
+;
+select soh.SalesOrderID, soh.CustomerID, count(sod.OrderQty) as 'Products' , sum(sod.LineTotal) as 'Amount'
+from Sales.SalesOrderHeader SOH
+     join Sales.SalesOrderDetail SOD on soh.SalesOrderID = sod.SalesOrderID 
+group by soh.SalesOrderID, soh.CustomerID 
+;
+;
+select soh.SalesOrderID, soh.CustomerID, count(sod.OrderQty) as 'Products' , sum(sod.LineTotal) as 'Amount'
+from Sales.SalesOrderHeader SOH
+     join Sales.SalesOrderDetail SOD on soh.SalesOrderID = sod.SalesOrderID 
+	 join Sales.Customer C on soh.CustomerID = c.CustomerID 
+group by soh.SalesOrderID, soh.CustomerID 
+;
+;
+select soh.SalesOrderID, soh.CustomerID, sohsr.SalesReasonID, sr.Name, sr.ReasonType 
+from Sales.SalesOrderHeader SOH 
+	 left join Sales.SalesOrderHeaderSalesReason SOHSR on soh.SalesOrderID = sohsr.SalesOrderID 
+	 left join Sales.SalesReason SR on sohsr.SalesReasonID = sr.SalesReasonID 
+
+
+select * from Sales.SalesOrderHeaderSalesReason; --27 647 
+select distinct SalesOrderID 
+from Sales.SalesOrderHeaderSalesReason; --- 23 012   (4 635)
+;
+;
+select * from Sales.SalesOrderDetail;
+select * from Sales.SalesOrderHeader;
+;
+;
+select  top 5 soh.SalesOrderID, count(sod.OrderQty), count(sod.ProductID) , sum(sod.LineTotal) --soh.TerritoryID, soh.ShipMethodID
+from Sales.SalesOrderHeader SOH
+     left join Sales.SalesOrderDetail SOD on soh.SalesOrderID = sod.SalesOrderID 
+group by soh.SalesOrderID 
+order by sum(sod.LineTotal) desc 
+;
+;
+select * from Sales.SalesOrderHeader
+where SalesOrderID in (51131,55282,46616,46981,47395)
+;
+select * from Sales.SalesOrderDetail;
+select * from Sales.SalesOrderHeader;
+select * from Sales.SalesTerritory;
+;
+select  soh.SalesOrderID, count(sod.OrderQty), count(sod.ProductID) , sum(sod.LineTotal),  
+st.Name, st.CountryRegionCode 
+from Sales.SalesOrderHeader SOH 
+     left join Sales.SalesOrderDetail SOD on soh.SalesOrderID = sod.SalesOrderID 
+	 join Sales.SalesTerritory ST on soh.TerritoryID = st.TerritoryID 
+--where st.Name = 'France'
+group by soh.SalesOrderID, st.Name, st.CountryRegionCode
+order by st.Name asc
+;
+;
+select * from Sales.SpecialOffer;
+select * from Sales.SpecialOfferProduct;
+select * from Production.Product; 
+;
+;
+select sop.SpecialOfferID, sop.ProductID, p.Name, p.ListPrice, so.Description, so.DiscountPct, 
+       p.ListPrice - p.ListPrice*so.DiscountPct as 'New Price after Discount'
+from Sales.SpecialOfferProduct SOP 
+     left join Production.Product P on sop.ProductID = p.ProductID 
+	 join      Sales.SpecialOffer SO on sop.SpecialOfferID = so.SpecialOfferID 
+order by so.DiscountPct desc , sop.ProductID asc
+
+----------------------------------------------------------------------------------------------------------
+
+USE AdventureWorks2012;
+GO
+;
+;
+select * from Production.BillOfMaterials ;
+select * from Production.Culture ;
+select * from Production.Document ;
+select * from Production.Illustration ;
+select * from Production.Location ;
+select * from Production.Product ;
+select * from Production.ProductCategory ;
+select * from Production.ProductCostHistory ;
+select * from Production.ProductDescription ;
+select * from Production.ProductDocument ;
+select * from Production.ProductInventory ;
+select * from Production.ProductListPriceHistory ;
+select * from Production.ProductModel ;
+select * from Production.ProductModelIllustration ;
+select * from Production.ProductModelProductDescriptionCulture ;
+select * from Production.ProductPhoto ;
+select * from Production.ProductProductPhoto ;
+select * from Production.ProductReview ;
+select * from Production.ProductSubcategory ;
+select * from Production.ScrapReason ;
+select * from Production.TransactionHistory ;
+select * from Production.TransactionHistoryArchive ;
+select * from Production.UnitMeasure ;
+select * from Production.WorkOrder ;
+select * from Production.WorkOrderRouting ;
+;
+;
+select * from Production.Product 
+where SizeUnitMeasureCode is not null 
+;
+;
+select * from Production.Product ;
+select * from Production.ProductSubcategory ;
+select * from Production.ProductCategory ;
+;
+select p.ProductID, p.Name, p.ProductLine, ps.ProductSubCategoryID 
+from Production.Product P 
+     left join Production.ProductSubCategory PS on p.ProductSubCategoryID = ps.ProductSubCategoryID 
+--where ps.ProductSubCategoryID is not null
+;
+;
+-- Products in ProductSubCategories 
+select ps.ProductSubCategoryID ,count(p.ProductID) as 'Products' , p.ProductLine
+from Production.Product P 
+     left join Production.ProductSubCategory PS on p.ProductSubCategoryID = ps.ProductSubCategoryID 
+where ps.ProductSubCategoryID is not null 
+group by p.ProductLine, ps.ProductSubCategoryID 
+order by count(p.ProductID) desc 
+;
+;
+select * from Production.ProductSubcategory ;
+select * from Production.ProductCategory ;
+select * from Production.Product ;
+;
+--ProductSubCategories in ProductCategories 
+select pc.ProductCategoryID, pc.Name , count(psc.ProductSubcategoryID) as 'ProductSubCategories Nr'
+from Production.ProductSubCategory PSC
+     join Production.ProductCategory PC on psc.ProductCategoryID = pc.ProductCategoryID
+group by pc.ProductCategoryID, pc.Name
+order by count(psc.ProductSubcategoryID) desc
+;
+;
+select * from Production.Product ;
+select * from Production.WorkOrder ;
+;
+;
+select wo.WorkOrderID, p.ProductID, wo.OrderQty, p.ListPrice, wo.OrderQty*p.ListPrice as 'Price'
+from Production.WorkOrder WO 
+     left join Production.Product P on wo.ProductID = p.ProductID
+;
+;
+select  count(wo.OrderQty), sum(wo.OrderQty), sum(wo.OrderQty*p.ListPrice) as 'Price'
+from Production.WorkOrder WO 
+       left join Production.Product P on wo.ProductID = p.ProductID
+;
+;
+
+---- to make a join with ProductModelID 
+select * from Production.Product ;
+select * from Production.ProductModel ;
+;
+;
+select count(p.ProductID) as 'Products', pm.ProductModelID, pm.Name 
+from Production.ProductModel PM 
+     right join Production.Product P on pm.ProductModelID = p.ProductModelID
+group by pm.ProductModelID, pm.Name 
+;
+;
+-- Products with ProductModelID 
+select * from Production.Product 
+where ProductModelID is not null 
+;
+;
+select * from Production.Product 
+where ProductmODELid IN (70,71,72,73,74,75,76,77)
+;
+;
+------------------------------------------------------------------------------------------
+-- CROSS JOIN TEST 
+USE TEST
+GO
+;
+;
+select * from dbo.Employee2
+
+select * from TEST.dbo.student
+select * from AdventureWorks2012.Production.ProductCategory
+
+select * 
+from TEST.dbo.student 
+     cross join AdventureWorks2012.Production.ProductCategory
+ ------------------------------------------------------------------------------------------------------
+
+USE AdventureWorks2012
+GO
+;
+;
+select * from Production.BillOfMaterials ;
+select * from Production.Culture ;
+select * from Production.Document ;
+select * from Production.Illustration ;
+select * from Production.Location ;
+select * from Production.Product ;
+select * from Production.ProductCategory ;
+select * from Production.ProductCostHistory ;
+select * from Production.ProductDescription ;
+select * from Production.ProductDocument ;
+select * from Production.ProductInventory ;
+select * from Production.ProductListPriceHistory ;
+select * from Production.ProductModel ;
+select * from Production.ProductModelIllustration ;
+select * from Production.ProductModelProductDescriptionCulture ;
+select * from Production.ProductPhoto ;
+select * from Production.ProductProductPhoto ;
+select * from Production.ProductReview ;
+select * from Production.ProductSubcategory ;
+select * from Production.ScrapReason ;
+select * from Production.TransactionHistory ;
+select * from Production.TransactionHistoryArchive ;
+select * from Production.UnitMeasure ;
+select * from Production.WorkOrder ;
+select * from Production.WorkOrderRouting ;
+;
+;
+select * from Production.TransactionHistory ;
+select * from Production.TransactionHistoryArchive ;
+;
+;
+select count(ProductID), sum(Quantity)
+from Production.TransactionHistory 
+;
+;
+select * from Sales.SalesOrderHeader ;
+select * from Sales.SalesOrderDetail ;
+select * from Sales.SalesTerritory   ;
+select * from Production.Product     ;
+select * from HumanResources.Employee;
+;
+;
+select sod.SalesOrderID, sod.OrderQty, sod.LineTotal, p.ProductID, p.Name 
+from Sales.SalesOrderDetail SOD 
+     join Production.Product P on sod.ProductID = p.ProductID 
+;
+;
+-- NR of Products by SalesOrderID 
+select sod.SalesOrderID, sum(sod.OrderQty) as 'Quantity', sum(sod.LineTotal) as 'TotalAmount' ,
+       count(p.ProductID) as 'Count of Products'
+from Sales.SalesOrderDetail SOD
+     join Production.Product P on sod.ProductID = p.ProductID 
+group by sod.SalesOrderID 
+order by sum(sod.LineTotal) desc 
+;
+;
+select * from Sales.SalesOrderHeader ;
+select * from Sales.SalesTerritory   ;
+select * from Production.Product     ;
+;
+;
+select st.TerritoryID, st.Name, sod.SalesOrderID, sod.Status
+from Sales.SalesTerritory ST 
+     join Sales.SalesOrderHeader SOD on st.TerritoryID = sod.TerritoryID 
+;
+;
+-- NR of SalesOrderIDs by Territory 
+select st.TerritoryID, st.Name, count(sod.SalesOrderID) as 'Nr of SalesOrders'
+from Sales.SalesTerritory ST 
+     join Sales.SalesOrderHeader SOD on st.TerritoryID = sod.TerritoryID 
+group by st.TerritoryID, st.Name 
+order by count(sod.SalesOrderID) desc 
+;
+;
+;
+select * from Sales.SalesOrderHeader ;
+select * from Sales.SalesTerritory   ;
+select * from Production.Product     ;
+select * from Sales.SalesOrderDetail ;
+;;;
+;;;
+-- NR of Products by SalesOrderID 
+select sod.SalesOrderID, sum(sod.OrderQty) as 'Quantity', sum(sod.LineTotal) as 'TotalAmount' ,
+       count(p.ProductID) as 'Count of Products'
+from Sales.SalesOrderDetail SOD 
+     join Production.Product P on sod.ProductID = p.ProductID 
+group by sod.SalesOrderID 
+order by sum(sod.LineTotal) desc 
+;
+;
+-- NR of SalesOrderIDs by Territory   
+-------
+--WRONG QUERY 
+-------
+select st.TerritoryID, st.Name, count(soh.SalesOrderID) as 'Nr of SalesOrders', 
+       sum(sod.LineTotal) as 'Amunt per TerritoryID', count(sod.ProductID) as 'Nr of Products per TerritoryID'
+from Sales.SalesTerritory ST 
+     join Sales.SalesOrderHeader SOH on st.TerritoryID = soh.TerritoryID 
+	 left join Sales.SalesOrderDetail SOD on soh.SalesOrderID = sod.SalesOrderID 
+group by st.TerritoryID, st.Name 
+order by count(soh.SalesOrderID) desc 
+;
+;
+-----
+select sod.SalesOrderID, sum(sod.OrderQty) as 'Quantity', sum(sod.LineTotal) as 'TotalAmount' ,
+       count(p.ProductID) as 'Count of Products', st.TerritoryID
+from Sales.SalesOrderDetail SOD 
+     join Production.Product P on sod.ProductID = p.ProductID 
+	 join Sales.SalesOrderHeader SOH on sod.SalesOrderID = soh.SalesOrderID 
+	 join Sales.SalesTerritory ST on soh.TerritoryID = st.TerritoryID 
+group by sod.SalesOrderID ,st.TerritoryID 
+order by sum(sod.LineTotal) desc 
+;
+---------------------------------------------------------------------------------------------------------------------------
+
+/*                      
+=============================================================================================
+      SUBQUERIES 
+=============================================================================================                               
+*/
+
+USE AdventureWorks2012;
+GO
+;
+;
+select * from Production.Product
+;
+
+select ProductID, Name, ListPrice
+from Production.Product 
+where ListPrice > (select AVG(ListPrice) from Production.Product)
+;
+;
+select AVG(ListPrice) from Production.Product
+;
+select Name, ListPrice,
+       (select avg(ListPrice) from Production.Product) as Average, 
+	   ListPrice - (select avg(ListPrice) from Production.Product) as Difference 
+from Production.Product 
+where ProductSubCategoryID = 1 
+;
+;
+select Name, ListPrice, (select max(ListPrice) from Production.Product), (select min(ListPrice) from Production.Product),
+       (select avg(ListPrice) from Production.Product), 
+	   (select avg(ListPrice) - min(ListPrice) from Production.Product),
+	   (select avg(ListPrice) + max(ListPrice) from Production.Product)
+from Production.Product 
+;
+;
+select * from Sales.SalesOrderHeader 
+;
+;
+select SalesOrderID, Status, CustomerID, SubTotal, Freight
+from Sales.SalesOrderHeader 
+where Freight > (select avg(Freight) from Sales.SalesOrderHeader) 
+;
+;
+select SalesOrderID, Status, CustomerID, SubTotal, Freight
+from Sales.SalesOrderHeader 
+--where Freight 
